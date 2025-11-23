@@ -9,8 +9,6 @@
 
 This project applies **Deep Learning** techniques to a fundamental problem in High-Energy Physics (HEP): detecting anomalous hadronic jets produced at the **Large Hadron Collider (LHC)**.
 
-At extreme energies, massive particles decay into hadronic jets that are highly collimated. Distinguishing whether a jet substructure originates from a known Standard Model particle (background) or a potential new massive particle (signal/anomaly) is a complex task. 
-
 We implemented a **Convolutional Autoencoder (CNN-AE)** to perform unsupervised anomaly detection, training the model to reconstruct "normal" jets and identifying anomalies based on reconstruction error and latent space analysis.
 
 ## 🎯 Key Objectives
@@ -20,27 +18,19 @@ We implemented a **Convolutional Autoencoder (CNN-AE)** to perform unsupervised 
 * **Anomaly Scoring:** Compare different metrics for outlier detection:
     * **MSE (Reconstruction Loss):** $L = ||x - \hat{x}||^2$
     * **Mahalanobis Distance:** Calculated in the latent space.
-* **Latent Space Analysis:** Use **PCA** and **Gaussian Mixture Models (GMM)** to interpret how the network organizes physical features.
-
-## 🛠️ Methodology & Tech Stack
-
-* **Frameworks:** Python, PyTorch, Scikit-Learn, NumPy, Matplotlib.
-* **Data Input:** 2D images ($100 \times 100$ pixels) representing energy deposits in calorimeter cells.
-* **Model Architecture:** * *Encoder:* 3 Convolutional blocks + MaxPool + Linear projection to $\mathbb{R}^{10}$.
-    * *Decoder:* Mirrored structure with ConvTranspose layers to reconstruct the input.
-* **Optimization:** Adam Optimizer, MSE Loss.
+* **Latent Space Analysis:** Use of **PCA**, **UMAP** and **Gaussian Mixture Models (GMM)** to interpret how the network organizes physical features.
 
 ## 📊 Results
 
 ### 1. Reconstruction Loss Analysis
-The model successfully learned to reconstruct background jets with low error, while failing to reconstruct anomalous jets (signals). This discrepancy allows for effective signal-background separation.
-
-> **Note:** [Insert your Histogram of Loss plot here]
+A reconstruction loss threshold is imposed such that the FPR is of 10% for the "Normal" dataset. The results obtained by using the latter threshold on the mixed datasets are compatible with the expected anomaly rates, though a lack of two visibly separated peaks for the normal and anomalous events is noted. More statisfactory results are obtained with the classification based on the Mahalanobis distance.
 
 ### 2. Latent Space Visualization
-By projecting the 10-dimensional latent space onto 2D using **PCA**, we observed distinct clustering behaviors between the background and the anomalous signals, validating the model's feature extraction capabilities.
+By projecting the latent space onto 2D using **PCA**, we observed distinct clustering behaviors between the background and the anomalous signals, validating the model's feature extraction capabilities. Analogous results are obtained using **UMAP**
 
-> **Note:** [Insert your PCA scatter plot here]
+### 3. Gaussian Mixture Models Analysis
+By setting the number of gaussian clusters to 2, being the "normal" and "anomalous" cluster, the anomaly rates result once more compatible with what expected. A purity analysis between the GMM's labels and the ones obtained with the reconstruction loss and the Mahalanobis distance result much higher for the latter.
+
 
 ### 3. Performance
 * **False Positive Rate (FPR):** Maintained $\le 10\%$ on background data.
@@ -55,28 +45,12 @@ Due to course policies and the educational nature of the dataset:
 * The **raw data files (`.npz`)** are **not** distributed here.
 * The code includes a placeholder `get_data()` function. If you have access to the specific CERN/Sapienza servers, you can restore the download links to reproduce the results.
 
-## 🚀 Usage
-
-1.  Clone the repository:
-    ```bash
-    git clone [https://github.com/yourusername/HEP_Anomaly_Detection.git](https://github.com/yourusername/HEP_Anomaly_Detection.git)
-    cd HEP_Anomaly_Detection
-    ```
-2.  Install dependencies:
-    ```bash
-    pip install torch torchvision numpy matplotlib scikit-learn
-    ```
-3.  Run the Jupyter Notebook:
-    ```bash
-    jupyter notebook DiProfio_Franco_Gabellini_37.ipynb
-    ```
-
 ## 👥 Authors
 
 Project developed by:
-* **[Your Name]**
-* **[Colleague Name 1]**
-* **[Colleague Name 2]**
+* **Lorenzo Gabellini**
+* **Caterina Di Profio**
+* **Giuseppe Franco**
 
 *Sapienza University of Rome - Department of Physics*
 
